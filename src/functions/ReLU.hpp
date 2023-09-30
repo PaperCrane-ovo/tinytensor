@@ -1,7 +1,7 @@
 #ifndef RELU_HPP
 #define RELU_HPP
 
-#include "../cuda/utils/cudautils.hpp"
+#include "../cuda/cudautils.hpp"
 #include "ActivationFunction.hpp"
 
 #include <cmath>
@@ -9,7 +9,7 @@ using namespace Crane;
 
 template <typename T>
 
-class ReLU:public ActivationFunction{
+class ReLU:public ActivationFunction<T>{
     public:
     ReLU();
     ~ReLU();
@@ -17,11 +17,5 @@ class ReLU:public ActivationFunction{
     virtual Tensor<T> backward(Tensor<T> input);
     virtual std::string getName();
 
-    private:
-    __global__ void reluForwardKernel(T* input, T* output, int size);
-    __global__ void reluBackwardKernel(T* input, T* output, int size);
-
-
 };
-
 #endif // RELU_HPP
