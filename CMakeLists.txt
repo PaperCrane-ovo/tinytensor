@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.21)
 
 project(tinytensor CUDA)
 
@@ -6,10 +6,10 @@ set(CMAKE_CUDA_ARCHITECTURES all)
 
 
 add_executable(test 
-${PROJECT_SOURCE_DIR}/test.cu 
-${PROJECT_SOURCE_DIR}/src/functions/ReLU.cu 
-${PROJECT_SOURCE_DIR}/src/functions/Sigmoid.cu 
-${PROJECT_SOURCE_DIR}/src/tensor/tensor.cu
+test.cu 
+src/functions/ReLU.cu 
+src/functions/Sigmoid.cu 
+src/tensor/tensor.cu
 )
 
 

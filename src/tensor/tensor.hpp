@@ -7,41 +7,32 @@
 #include <memory>
 #include "../cuda/cudautils.hpp"
 
-
-namespace Crane
+template <typename T>
+class Tensor
 {
-    template <typename T>
-    class Tensor{
-        public:
-            Tensor(std::vector<int> shape);
-            Tensor (std::vector<int> shape, std::string device);
-            Tensor(const Tensor& tensor);
-            ~Tensor();
-            // 获取张量的形状
-            std::vector<int> getShape() const;
-            // 获取张量的数据
-            T& operator()(std::vector<int> index);
-            
-            void Set(std::vector<int> index, T value);
-            void print();
+public:
+    Tensor(std::vector<int> shape, std::string device = "cpu");
+    Tensor(const Tensor &tensor);
+    ~Tensor();
+    // 获取张量的形状
+    std::vector<int> getShape() const;
+    // 获取张量的数据
+    T &operator()(std::vector<int> index);
 
-            Tensor to(std::string device);
-            Tensor cpu();
-            Tensor gpu();
-            
-            
+    void Set(std::vector<int> index, T value);
+    void print();
 
-        private:
-            std::vector<int> shape_;
-            std::shared_ptr<T> data_;
-            int size_;
-            Device device_;
+    Tensor to(std::string device);
+    Tensor cpu();
+    Tensor gpu();
 
-            int Index(std::vector<int> indices) const;
+private:
+    std::vector<int> shape_;
+    std::shared_ptr<T> data_;
+    int size_;
+    Device device_;
 
-
-
-    };
-}
+    int Index(std::vector<int> indices) const;
+};
 
 #endif // TENSOR_H

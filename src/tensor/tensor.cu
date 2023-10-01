@@ -1,10 +1,5 @@
 #include "tensor.hpp"
 
-using namespace Crane;
-
-template <typename T>
-Tensor<T>::Tensor(std::vector<int> shape):Tensor<T>::Tensor(shape,"cpu"){
-}
 
 
 template<typename T>
