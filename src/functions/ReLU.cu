@@ -8,24 +8,24 @@ ReLU<T>::~ReLU(){}
 template<typename T>
 Tensor<T> ReLU<T>::forward(Tensor<T> input){
     Tensor<T> output(input.shape_, input.device_);
-    if(input.device_ == CPU){
+    if(input.device_ == Device::CPU){
         for(int i = 0; i < input.size_; i++){
             output.data_[i] = std::max((T)0, input.data_[i]);
         }
     }else{
-        ReluForwardKernel<<<CudaGetBlocks(input.size_),kCudaThreadsNum>>>(
+        reluForwardKernel<<<CudaGetBlocks(input.size_),kCudaThreadsNum>>>(
             input.data_,output.data_,input.size_);
     }
 }
 template<typename T>
 Tensor<T> ReLU<T>::backward(Tensor<T> grad){
     Tensor<T> output(grad.shape_, grad.device_);
-    if(grad.device_ == "cpu"){
+    if(grad.device_ == Device::CPU){
         for(int i = 0; i < grad.size_; i++){
             output.data_[i] = std::max((T)0, grad.data_[i]);
         }
     }else{
-        ReluBackwardKernel<<<CudaGetBlocks(grad.size_),kCudaThreadsNum>>>(
+        reluBackwardKernel<<<CudaGetBlocks(grad.size_),kCudaThreadsNum>>>(
             grad.data_,output.data_,grad.size_);
     }
     return output;

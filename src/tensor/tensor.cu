@@ -9,17 +9,17 @@ Tensor<T>::Tensor(std::vector<int> shape):Tensor<T>::Tensor(shape,"cpu"){
 
 template<typename T>
 Tensor<T>::Tensor(std::vector<int> shape,std::string device){
-    device_ = device;
+    device_ = device == "cpu" ? Device::CPU : Device::CUDA;
     shape_ = shape;
     size_ = 1;
     for (int i = 0; i < shape.size(); i++){
         size_ *= shape[i];
     }
     switch(device_){
-        case "cpu":
+        case Device::CPU:
             data_ = std::make_shared<T>(new T[size_],deleteData);
             break;
-        case "cuda":
+        case Device::CUDA:
             data_ = std::shared_ptr<T>(nullptr,deleteData);
             cudaMalloc(data_.get(),size_ * sizeof(T));
             break;
@@ -37,12 +37,12 @@ Tensor<T>::Tensor(const Tensor<T>& tensor){
 }
 
 template <typename T>
-void Tensor<T>::deleteData(T* ptr){
+void deleteData(T* ptr){
     switch(device_){
-        case "cpu":
+        case Device::CPU:
             delete[] ptr;
             break;
-        case "cuda":
+        case Device::CUDA:
             cudaFree(ptr);
             break;
         default:
@@ -56,10 +56,10 @@ Tensor<T>::~Tensor(){
         return;
     }
     switch (device_){
-        case "cpu":
+        case Device::CPU:
             delete[] data_;
             break;
-        case "cuda":
+        case Device::CUDA:
             cudaFree(data_);
             break;
         default:
@@ -132,7 +132,7 @@ Tensor<T> Tensor<T>::to(std::string device){
 
 template <typename T>
 Tensor<T> Tensor<T>::cpu(){
-    if(device_ == "cpu"){
+    if(device_ == Device::CPU){
         return this;
     }
     else{
@@ -140,14 +140,14 @@ Tensor<T> Tensor<T>::cpu(){
         cudaMemcpy(data_cpu,this->data_,size_ * sizeof(T), cudaMemcpyDeviceToHost);
         cudaFree(this->data_);
         this->data_ = data_cpu;
-        this->device_ = "cpu";
+        this->device_ = Device::CUDA;
         return this;
     }
 }
 
 template <typename T>
 Tensor<T> Tensor<T>::gpu(){
-    if(device_ == "cuda"){
+    if(device_ == Device::CUDA){
         return this;
     }
     else{
@@ -156,7 +156,7 @@ Tensor<T> Tensor<T>::gpu(){
         cudaMemcpy(data_gpu,this->data_,this->size_ * sizeof(T), cudaMemcpyHostToDevice);
         delete[] this->data_;
         this->data_ = data_gpu;
-        this->device_ = "cuda";
+        this->device_ = Device::CUDA;
         return this;
     }
 }

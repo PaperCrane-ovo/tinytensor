@@ -1,10 +1,11 @@
-#ifndef TENSOR_H
+﻿#ifndef TENSOR_H
 #define TENSOR_H
 
 #include <iostream>
 #include <vector>
 #include <string>
 #include <memory>
+#include "../cuda/cudautils.hpp"
 
 
 namespace Crane
@@ -33,9 +34,8 @@ namespace Crane
         private:
             std::vector<int> shape_;
             std::shared_ptr<T> data_;
-            void deleteData(T* ptr);
             int size_;
-            std::string device_;
+            Device device_;
 
             int Index(std::vector<int> indices) const;
 

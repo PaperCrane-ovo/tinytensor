@@ -11,4 +11,10 @@ inline int CudaGetBlocks(const int N) {
 // Define the grid stride looping
 #define CUDA_KERNEL_LOOP(i, n)  for(int i = blockIdx.x * blockDim.x + threadIdx.x;i < (n);i += blockDim.x * gridDim.x)
 
+enum class Device{
+    CPU = 0,
+    CUDA = 1
+};
+
+
 #endif // CUDA_UTILS_H
