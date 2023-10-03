@@ -6,6 +6,8 @@
 #include <string>
 #include <memory>
 #include "../cuda/cudautils.hpp"
+#include "datastorage.hpp"
+#include "datastorage.cu"
 
 template <typename T>
 class Tensor
@@ -20,7 +22,7 @@ public:
     T &operator()(std::vector<int> index);
 
     void Set(std::vector<int> index, T value);
-    void print();
+    // void print();
 
     Tensor to(std::string device);
     Tensor cpu();
@@ -28,9 +30,8 @@ public:
 
 private:
     std::vector<int> shape_;
-    std::shared_ptr<T> data_;
-    int size_;
-    Device device_;
+
+    std::shared_ptr<DataStorage<T>> data_;
 
     int Index(std::vector<int> indices) const;
 };

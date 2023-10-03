@@ -5,7 +5,6 @@
 #include "ActivationFunction.hpp"
 
 #include <cmath>
-using namespace Crane;
 
 template <typename T>
 

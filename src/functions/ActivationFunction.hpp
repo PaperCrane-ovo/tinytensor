@@ -6,17 +6,14 @@
 #include <string>
 #include <cuda_runtime.h>
 #include "../tensor/tensor.hpp"
-namespace Crane{
-    template<typename T>
-class ActivationFunction {
-    public:
-        virtual Tensor<T> forward(Tensor<T> input) = 0;
-        virtual Tensor<T> backward(Tensor<T> input) = 0;
-        virtual std::string getName() = 0;
 
-
-
-    };
-}
+template <typename T>
+class ActivationFunction
+{
+public:
+    virtual Tensor<T> forward(Tensor<T> input) = 0;
+    virtual Tensor<T> backward(Tensor<T> input) = 0;
+    virtual std::string getName() = 0;
+};
 
 #endif /* ACTIVATIONFUNCTION_HPP_ */

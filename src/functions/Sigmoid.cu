@@ -1,6 +1,5 @@
 #include "Sigmoid.hpp"
 
-using namespace Crane;
 template <typename T>
 Sigmoid<T>::Sigmoid(){}
 template<typename T>

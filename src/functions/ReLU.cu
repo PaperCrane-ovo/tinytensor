@@ -1,6 +1,5 @@
 #include "ReLU.hpp"
 
-using namespace Crane;
 template<typename T>
 ReLU<T>::ReLU(){}
 template<typename T>

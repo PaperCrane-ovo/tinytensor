@@ -5,7 +5,6 @@
 #include "../cuda/cudautils.hpp"
 
 #include <cmath>
-using namespace Crane;
 template<typename T>
 class Sigmoid : public ActivationFunction<T> {
     public:
