@@ -15,7 +15,6 @@ main.cu
 target_include_directories(main
 PRIVATE 
 ${PROJECT_SOURCE_DIR}/src
-E:/Program_Files/cuda_computing_toolkit_12.2/include
 )
 
 
