@@ -1,4 +1,30 @@
-#include "datastorage.hpp"
+#ifndef DATASTORAGE_HPP
+#define DATASTORAGE_HPP
+
+#include <vector>
+#include <memory>
+#include <cuda_runtime.h>
+#include <string>
+#include <iostream>
+#include "../cuda/cudautils.cuh"
+
+
+template <typename T>
+class DataStorage{
+    public:
+        DataStorage(int size, Device device);
+        DataStorage(T* data,int size, Device device);
+
+        ~DataStorage();
+        void to(std::string device);
+        void to(Device device);
+
+        T* data;
+        int size;
+        Device device;
+
+
+};
 
 template <typename T>
 DataStorage<T>::DataStorage(int size,Device device) {
@@ -64,3 +90,5 @@ void DataStorage<T>::to(Device device){
 
     }
 }
+
+#endif // DATASTORAGE_HPP

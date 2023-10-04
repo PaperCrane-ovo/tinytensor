@@ -7,11 +7,8 @@ set(CMAKE_CUDA_ARCHITECTURES all)
 
 
 add_executable(main
-main.cpp
-src/functions/ReLU.cu 
-src/functions/Sigmoid.cu 
-src/tensor/tensor.cpp
-src/tensor/datastorage.cu
+main.cu
+
 )
 
 
