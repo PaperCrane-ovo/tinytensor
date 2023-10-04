@@ -6,26 +6,26 @@ template<typename T>
 ReLU<T>::~ReLU(){}
 template<typename T>
 Tensor<T> ReLU<T>::forward(Tensor<T> input){
-    Tensor<T> output(input.shape_, input.device_);
-    if(input.device_ == Device::CPU){
-        for(int i = 0; i < input.size_; i++){
-            output.data_[i] = std::max((T)0, input.data_[i]);
+    Tensor<T> output(input.getShape(), input.getDevice());
+    if(input.getDevice() == Device::CPU){
+        for(int i = 0; i < input.getSize(); i++){
+            output[i] = std::max((T)0, input[i]);
         }
     }else{
         reluForwardKernel<<<CudaGetBlocks(input.size_),kCudaThreadsNum>>>(
-            input.data_,output.data_,input.size_);
+            input.data_->data,output.data_->data,input.getSize());
     }
 }
 template<typename T>
 Tensor<T> ReLU<T>::backward(Tensor<T> grad){
-    Tensor<T> output(grad.shape_, grad.device_);
-    if(grad.device_ == Device::CPU){
-        for(int i = 0; i < grad.size_; i++){
-            output.data_[i] = std::max((T)0, grad.data_[i]);
+    Tensor<T> output(grad.getShape(), grad.getDevice());
+    if(grad.getDevice() == Device::CPU){
+        for(int i = 0; i < grad.getSize(); i++){
+            output[i] = std::max((T)0, grad[i]);
         }
     }else{
         reluBackwardKernel<<<CudaGetBlocks(grad.size_),kCudaThreadsNum>>>(
-            grad.data_,output.data_,grad.size_);
+            grad.data_->data,output.data_->data,grad.getSize());
     }
     return output;
 }

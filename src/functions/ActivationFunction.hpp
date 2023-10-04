@@ -11,6 +11,7 @@ template <typename T>
 class ActivationFunction
 {
 public:
+    ActivationFunction(){};
     virtual Tensor<T> forward(Tensor<T> input) = 0;
     virtual Tensor<T> backward(Tensor<T> input) = 0;
     virtual std::string getName() = 0;

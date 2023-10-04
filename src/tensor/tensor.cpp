@@ -1,6 +1,7 @@
 #include "tensor.hpp"
 
-
+template<typename T>
+Tensor<T>::Tensor(){}
 
 template<typename T>
 Tensor<T>::Tensor(std::vector<int> shape,std::string device){
@@ -12,6 +13,17 @@ Tensor<T>::Tensor(std::vector<int> shape,std::string device){
     Device device_ = device == "cuda" ? Device::CUDA : Device::CPU;
     data_ = std::make_shared<DataStorage<T>>(size,device_);
 }
+
+template<typename T>
+Tensor<T>::Tensor(std::vector<int> shape,Device device){
+    shape_ = shape;
+    int size = 1;
+    for (int i = 0; i < shape.size(); i++){
+        size *= shape[i];
+    }
+    data_ = std::make_shared<DataStorage<T>>(size,device);
+}
+
 //TODO: implement copy constructor
 template<typename T>
 Tensor<T>::Tensor(const Tensor<T>& tensor){
@@ -19,6 +31,19 @@ Tensor<T>::Tensor(const Tensor<T>& tensor){
     data_ = tensor.data_;
 }
 
+template <typename T>
+template <typename A, typename>
+Tensor<T>::Tensor(const A &a) : shape_(GetShape<A>::get_shape())
+{
+    int s= 1;
+    for (int i = 0; i < shape_.size(); i++){
+        s *= shape_[i];
+    }
+    data_ = std::make_shared<DataStorage<T>>(s,Device::CPU);
+    std::memmove(data_->data, a, s * sizeof(T));
+    // 将size逆序
+    std::reverse(shape_.begin(), shape_.end());
+}
 
 template <typename T>
 Tensor<T>::~Tensor(){}
@@ -37,12 +62,17 @@ T& Tensor<T>::operator()(std::vector<int> index){
 }
 
 template <typename T>
+T& Tensor<T>::operator[](int index){
+    return (data_->data)[index];
+}
+
+template <typename T>
 void Tensor<T>::Set(std::vector<int> index, T value){
     int i = Index(index);
     (data_->data)[i] = value;
 }
 
-/* template <typename T>
+template <typename T>
 void Tensor<T>::print(){
     std::cout << "Tensor(";
     for (int i = 0; i < shape_.size(); i++){
@@ -53,14 +83,15 @@ void Tensor<T>::print(){
     }
     std::cout << ")" << std::endl;
     std::cout << "data: [";
-    for (int i = 0; i < size_; i++){
-        std::cout << data_[i];
-        if (i != size_ - 1){
+    int size = this->getSize();
+    for (int i = 0; i < size; i++){
+        std::cout << data_->data[i];
+        if (i != size - 1){
             std::cout << ", ";
         }
     }
     std::cout << "]" << std::endl;
-} */
+}
 
 template <typename T>
 int Tensor<T>::Index(std::vector<int> indices) const{
@@ -104,4 +135,14 @@ template <typename T>
 Tensor<T> Tensor<T>::gpu(){
     this->data_->to(Device::CUDA);
     return *this;
+}
+
+template <typename T>
+int Tensor<T>::getSize() const{
+    return data_->size;
+}
+
+template <typename T>
+Device Tensor<T>::getDevice() const{
+    return data_->device;
 }
