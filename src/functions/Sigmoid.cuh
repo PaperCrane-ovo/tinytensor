@@ -37,7 +37,6 @@ Tensor<T> Sigmoid<T>::forward(Tensor<T>& input){
     }else{
         sigmoidForwardKernel<<<CudaGetBlocks(input.getSize()),kCudaThreadsNum>>>(input.data_->data,output.data_->data,input.getSize(),this->output.data_->data);
     }
-    output.print();
     return output;
 }
 

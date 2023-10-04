@@ -74,6 +74,7 @@ void DataStorage<T>::to(Device device){
                 cudaMemcpy(temp,this->data,size * sizeof(T),cudaMemcpyDeviceToHost);
                 cudaFree(this->data);
                 this->data = temp;
+                this->device = Device::CPU;
             }
             break;
         case Device::CUDA:
@@ -83,6 +84,7 @@ void DataStorage<T>::to(Device device){
                 cudaMemcpy(temp,this->data,size * sizeof(T),cudaMemcpyHostToDevice);
                 delete[] this->data;
                 this->data = temp;
+                this->device = Device::CUDA;
             }
             break;
         default:

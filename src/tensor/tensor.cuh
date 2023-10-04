@@ -58,6 +58,7 @@ public:
     void print();
 
     Tensor to(std::string device);
+    Tensor to(Device device);
     Tensor cpu();
     Tensor gpu();
 
@@ -149,6 +150,8 @@ void Tensor<T>::Set(std::vector<int> index, T value){
 
 template <typename T>
 void Tensor<T>::print(){
+    Device device = data_->device;
+    this->to("cpu");
     std::cout << "Tensor(";
     for (int i = 0; i < shape_.size(); i++){
         std::cout << shape_[i];
@@ -166,6 +169,7 @@ void Tensor<T>::print(){
         }
     }
     std::cout << "]" << std::endl;
+    this->to(device);
 }
 
 template <typename T>
@@ -197,6 +201,21 @@ Tensor<T> Tensor<T>::to(std::string device){
     }
     else{
         std::cerr << "Error: device not supported" << std::endl;
+        exit(1);
+    }
+}
+
+template <typename T>
+Tensor<T> Tensor<T>::to(Device device){
+    if (device == Device::CUDA){
+        return gpu();
+    }
+    else if (device == Device::CPU){
+        return cpu();
+    }
+    else{
+        std::cerr << "Error: device not supported" << std::endl;
+        exit(1);
     }
 }
 

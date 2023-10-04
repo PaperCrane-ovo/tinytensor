@@ -31,9 +31,10 @@ Tensor<T> ReLU<T>::forward(Tensor<T> &input){
             output[i] = std::max((T)0, input[i]);
         }
     }else{
-        reluForwardKernel<<<CudaGetBlocks(input.size_),kCudaThreadsNum>>>(
+        reluForwardKernel<<<CudaGetBlocks(input.getSize()),kCudaThreadsNum>>>(
             input.data_->data,output.data_->data,input.getSize());
     }
+    return output;
 }
 template<typename T>
 Tensor<T> ReLU<T>::backward(Tensor<T> &grad){
@@ -43,8 +44,9 @@ Tensor<T> ReLU<T>::backward(Tensor<T> &grad){
             output[i] = std::max((T)0, grad[i]);
         }
     }else{
-        reluBackwardKernel<<<CudaGetBlocks(grad.size_),kCudaThreadsNum>>>(
+        reluBackwardKernel<<<CudaGetBlocks(grad.getSize()),kCudaThreadsNum>>>(
             grad.data_->data,output.data_->data,grad.getSize());
+        
     }
     return output;
 }
