@@ -19,6 +19,9 @@ class ReLU:public ActivationFunction<T>{
 };
 
 
+/*******************************/
+
+
 template<typename T>
 ReLU<T>::ReLU(){}
 template<typename T>

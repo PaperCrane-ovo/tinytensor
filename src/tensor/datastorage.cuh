@@ -26,6 +26,18 @@ class DataStorage{
 
 };
 
+
+
+
+
+
+/*********************************/
+
+
+
+
+
+
 template <typename T>
 DataStorage<T>::DataStorage(int size,Device device) {
     this->size = size;

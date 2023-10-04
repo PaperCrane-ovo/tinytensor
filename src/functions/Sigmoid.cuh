@@ -20,6 +20,8 @@ class Sigmoid : public ActivationFunction<T> {
         Tensor<T> output;
 };
 
+/***********************/
+
 template <typename T>
 Sigmoid<T>::Sigmoid(){}
 template<typename T>

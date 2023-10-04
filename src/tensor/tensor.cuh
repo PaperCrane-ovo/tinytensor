@@ -76,6 +76,10 @@ private:
 
 
 
+/*****************************************/
+
+
+
 template<typename T>
 Tensor<T>::Tensor(){}
 
