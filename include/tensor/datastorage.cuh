@@ -22,6 +22,7 @@ class DataStorage{
         T* data;
         int size;
         Device device;
+        bool sub=false;
 
 
 };
@@ -61,11 +62,18 @@ DataStorage<T>::DataStorage(T* data,int size,Device device){
     }
 }
 template <typename T>
-DataStorage<T>::~DataStorage() {
-    if (device == Device::CPU) {
-        delete[] data;
-    } else {
-        cudaFree(data);
+DataStorage<T>::~DataStorage()
+{
+    if (!sub)
+    {
+        if (device == Device::CPU)
+        {
+            delete[] data;
+        }
+        else
+        {
+            cudaFree(data);
+        }
     }
 }
 template <typename T>
