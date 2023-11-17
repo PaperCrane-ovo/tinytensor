@@ -40,11 +40,3 @@
 如果需要自定义激活函数，需要继承`ActivationFunction`基类并实现`forward`、`backward`、`getName`函数，并尽量实现核函数，以防不在同一个 device 上出现异常。
 
 
-## 全连接层：
-对cublas的封装，实现了全连接层的正向及反向传播，支持gpu上的运算。正确性尚未检查。
-
-## 卷积层：
-需要先实现im2col和col2im函数，然后再实现卷积层的正向及反向传播。
-### im2col：
-每个batch用cpu循环，然后在batch内用gpu，每次将一个卷积核的数据转换。
-

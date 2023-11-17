@@ -30,9 +30,11 @@ FullyConnected<T>::FullyConnected(int in_size,int out_size){
     mDevice=Device::CUDA;
     mWeight = Tensor<T>({mInFeature,mOutFeature},mDevice);
     // TODO: init weight
+    mWeight.randomfill();
 
     if (mUseBias){
         mBias = Tensor<T>({mOutFeature},mDevice);
+        mBias.randomfill();
     }
 }
 template <typename T>

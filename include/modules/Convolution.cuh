@@ -43,6 +43,7 @@ Convolution<T>::Convolution(int in_channel, int out_channel)
     mStride = 1;
     mPadding = 0;
     mWeight = Tensor<T>({out_channel, in_channel, mKernelSize, mKernelSize}, Device::CUDA); // TODO: 初始化权重
+    mWeight.randomfill();
 
     mUseBias = false;
 }
@@ -92,7 +93,7 @@ Tensor<T> Convolution<T>::forward(const Tensor<T> &input)
         Tensor<T> col = Tensor<T>::subtensor(mIm2Col, {mHeight * mWidth, mKernelSize * mKernelSize * mInChannel}, i * mHeight * mWidth);
         // 一共开mHeight*mWidth*mInChannel个线程
         im2col_kernel<<<CudaGetBlocks(mInChannel * mHeight * mWidth), kCudaThreadsNum>>>(im.data_->data, col.data_->data, mInChannel, mHeight, mWidth);
-        Tensor<T> out = Tensor<T>::subtensor(mOutput, {mOutChannel, mHeight* mWidth}, i * mOutChannel * mHeight * mWidth);
+        Tensor<T> out = Tensor<T>::subtensor(mOutput, {mOutChannel, mHeight * mWidth}, i * mOutChannel * mHeight * mWidth);
         Tensor<T>::matmul(1.0, mWeight, col, 0.0, out, false, true);
         if (mUseBias)
         {
@@ -139,9 +140,11 @@ Tensor<T> Convolution<T>::backward(const Tensor<T> &grad)
         col2im_kernel<<<CudaGetBlocks(mInChannel * mHeight * mWidth), kCudaThreadsNum>>>(col.data_->data, im.data_->data, mInChannel, mHeight, mWidth);
     }
 
-    if (mUseBias){
+    if (mUseBias)
+    {
         mBiasGrad.fill(0.0);
-        for (int i=0;i<mBatchSize;i++){
+        for (int i = 0; i < mBatchSize; i++)
+        {
             auto out = Tensor<T>::subtensor(mOutGrad, {mOutChannel, mHeight * mWidth}, i * mOutChannel * mHeight * mWidth);
             auto ones = Tensor<T>({1, mHeight * mWidth}, out.getDevice());
             ones.fill(1.0);

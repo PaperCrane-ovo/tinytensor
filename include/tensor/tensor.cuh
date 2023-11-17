@@ -74,6 +74,7 @@ public:
 
     void fill(T value);
     void transpose();
+    void randomfill();
 
     // TODO
     static Tensor<T> subtensor(const Tensor<T> &tensor,std::vector<int> shape,int offset);
@@ -387,6 +388,26 @@ Tensor<T> Tensor<T>::subtensor(const Tensor<T> &tensor,std::vector<int> shape,in
     result.data_->data = tensor.data_->data + offset;
     result.data_->sub = true;
     return result;
+}
+
+template <typename T>
+void Tensor<T>::randomfill(){
+    // 使用curand随机填充
+    if(getDevice()==Device::CPU){
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<T> dis(0,1);
+        for(int i=0;i<getSize();i++){
+            data_->data[i] = dis(gen);
+        }
+    }
+    else{
+        curandGenerator_t gen;
+        curandCreateGenerator(&gen,CURAND_RNG_PSEUDO_DEFAULT);
+        curandSetPseudoRandomGeneratorSeed(gen,1234ULL);
+        curandGenerateUniform(gen,data_->data,getSize());
+        curandDestroyGenerator(gen);
+    }
 }
 
 
