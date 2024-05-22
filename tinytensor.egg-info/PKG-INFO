@@ -1,0 +1,8 @@
+Metadata-Version: 2.1
+Name: tinytensor
+Version: 0.0.1
+Author: papercrane
+Author-email: 2100013134@stu.pku.edu.cn
+License: MIT
+Classifier: License :: OSI Approved :: MIT License
+Requires-Python: >=3.8
